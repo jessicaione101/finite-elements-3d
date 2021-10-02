@@ -339,6 +339,50 @@ void d2psi_neo_hookean_dF2(Eigen::Matrix99d &ddw, Eigen::Ref<const Eigen::Matrix
 
   // row 7
 
+  F_sub_term1 = F(0, 2)*F(1, 0) - F(0, 0)*F(1, 2);
+
+  F_single_term1 = F(1, 2);
+  F_single_term2 = F(0, 0);
+  F_sub_term2 = F(1, 1)*F(2, 2) - F(1, 2)*F(2, 1);
+  F_multi_term = F_sub_term1*F_sub_term2;
+  ddw(7, 0) = -orange_term*F_single_term1 + red_term*F_single_term1 + blue_term*F_single_term2*F_sub_term1 + yellow_term*F_multi_term + green_term*F_multi_term;
+
+  F_sub_term2 = F(1, 2)*F(2, 0) - F(1, 0)*F(2, 2);
+  F_multi_term = F_sub_term1*F_sub_term2;
+  ddw(7, 1) = yellow_term*F_multi_term + green_term*F_multi_term;
+
+  F_single_term1 = F(1, 0);
+  F_sub_term2 = F(1, 0)*F(2, 1) - F(1, 1)*F(2, 0);
+  F_multi_term = F_sub_term1*F_sub_term2;
+  ddw(7, 2) = orange_term*F_single_term1 - red_term*F_single_term1 + yellow_term*F_multi_term + green_term*F_multi_term;
+
+  F_single_term1 = F(0, 2);
+  F_sub_term2 = F(0, 2)*F(2, 1) - F(0, 1)*F(2, 2);
+  F_multi_term = F_sub_term1*F_sub_term2;
+  ddw(7, 3) = orange_term*F_single_term1 - red_term*F_single_term1 + yellow_term*F_multi_term + green_term*F_multi_term;
+
+  F_single_term1 = F(1, 1);
+  F_sub_term2 = F(0, 0)*F(2, 2) - F(0, 2)*F(2, 0);
+  F_multi_term = F_sub_term1*F_sub_term2;
+  ddw(7, 4) = blue_term*F_single_term1*F_sub_term1 + yellow_term*F_multi_term + green_term*F_multi_term;
+
+  F_single_term1 = F(0, 0);
+  F_sub_term2 = F(0, 1)*F(2, 0) - F(0, 0)*F(2, 1);
+  F_multi_term = F_sub_term1*F_sub_term2;
+  ddw(7, 5) = -orange_term*F_single_term1 + red_term*F_single_term1 + yellow_term*F_multi_term + green_term*F_multi_term;
+
+  F_sub_term2 = F(0, 1)*F(1, 2) - F(0, 2)*F(1, 1);
+  F_multi_term = F_sub_term1*F_sub_term2;
+  ddw(7, 6) = yellow_term*F_multi_term + green_term*F_multi_term;
+
+  F_multi_term = F_sub_term1*F_sub_term1;
+  ddw(7, 7) = yellow_term*F_multi_term + green_term*F_multi_term;
+
+  F_single_term1 = F(2, 2);
+  F_sub_term2 = F(0, 0)*F(1, 1) - F(0, 1)*F(1, 0);
+  F_multi_term = F_sub_term1*F_sub_term2;
+  ddw(7, 8) = blue_term*F_single_term1*F_sub_term1 + yellow_term*F_multi_term + green_term*F_multi_term;
+
   // row 8
 
 }
