@@ -2,7 +2,7 @@
 #include <EigenTypes.h>
 
 //Input:
-// qdot - generalied velocity of FEM system
+// qdot - generalized velocity of FEM system
 // element - vertex indices of the element
 // density - material density
 // volume - volume of tetrahedron
