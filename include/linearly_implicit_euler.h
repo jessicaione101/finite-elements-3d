@@ -19,6 +19,19 @@ template<typename FORCE, typename STIFFNESS>
 inline void linearly_implicit_euler(Eigen::VectorXd &q, Eigen::VectorXd &qdot, double dt, 
                             const Eigen::SparseMatrixd &mass,  FORCE &force, STIFFNESS &stiffness, 
                             Eigen::VectorXd &tmp_force, Eigen::SparseMatrixd &tmp_stiffness) {
-    
+  force(tmp_force, q, qdot);
+  stiffness(tmp_stiffness, q, qdot);
+  Eigen::SparseMatrixd A = mass - dt*dt*tmp_stiffness;
+  Eigen::VectorXd b = mass*qdot + dt*tmp_force;
+  Eigen::SimplicialLDLT<Eigen::SparseMatrixd> solver;
 
+  solver.compute(A);
+  if (solver.info() != Eigen::Success)
+    return;
+  Eigen::VectorXd _qdot = solver.solve(b);
+  if (solver.info() != Eigen::Success)
+    return;
+
+  qdot = _qdot;
+  q = q + dt*qdot;
 }
