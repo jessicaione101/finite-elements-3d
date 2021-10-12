@@ -59,4 +59,4 @@ void assemble_stiffness(Eigen::SparseMatrixd &K, Eigen::Ref<const Eigen::VectorX
 
   K.resize(q.size(), q.size());
   K.setFromTriplets(coefficients.begin(), coefficients.end());
-};
+}
