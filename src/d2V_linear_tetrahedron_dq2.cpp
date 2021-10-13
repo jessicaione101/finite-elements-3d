@@ -23,7 +23,7 @@ void d2V_linear_tetrahedron_dq2(Eigen::Matrix1212d &H, Eigen::Ref<const Eigen::V
 
     Eigen::Matrix<double, 9, 12> B = Eigen::Matrix<double, 9, 12>::Zero();
     for (int i = 0; i < dphi.rows(); ++i)
-      B.block(0, i*3, 3, 1) = B.block(3, i*3+1, 3, 1) = B.block(6, i*3+2, 3, 1) = dphi.row(i);
+      B.block(0, i*3, 3, 1) = B.block(3, i*3+1, 3, 1) = B.block(6, i*3+2, 3, 1) = dphi.row(i).transpose();
 
     dV = B.transpose() * ddw * B;
   };
