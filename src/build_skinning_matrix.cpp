@@ -24,6 +24,7 @@ void build_skinning_matrix(Eigen::SparseMatrixd &N, Eigen::Ref<const Eigen::Matr
         continue;
       for (int k = 0; k < phi.rows(); ++k)
         coefficients.emplace_back(i, T(j, k), phi(k));
+      break;
     }
   }
 
