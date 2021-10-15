@@ -124,53 +124,38 @@ void d2psi_neo_hookean_dF2(Eigen::Matrix99d &ddw, Eigen::Ref<const Eigen::Matrix
   ddw(2, 8) = yellow_blue_green_pattern(F_sub_term1*F_sub_term2, F_sub_term1, F_sub_term2, F_single_term, F(2, 2));
 
   // row 3
-/*
+
+  F_single_term = F(1, 0);
   F_sub_term1 = F(0, 2)*F(2, 1) - F(0, 1)*F(2, 2);
 
-  F_single_term1 = F(0, 0);
   F_sub_term2 = F(1, 1)*F(2, 2) - F(1, 2)*F(2, 1);
-  F_multi_term = F_sub_term1*F_sub_term2;
-  ddw(3, 0) = yellow_term*F_multi_term + blue_term*F_single_term1*F_sub_term1 + green_term*F_multi_term;
+  ddw(3, 0) = yellow_blue_green_pattern(F_sub_term1*F_sub_term2, F_sub_term1, F_sub_term2, F_single_term, F(0, 0));
 
-  F_single_term1 = F(2, 2);
   F_sub_term2 = F(1, 2)*F(2, 0) - F(1, 0)*F(2, 2);
-  F_multi_term = F_sub_term1*F_sub_term2;
-  ddw(3, 1) = -orange_term*F_single_term1 + red_term*F_single_term1 + yellow_term*F_multi_term + green_term*F_multi_term;
+  ddw(3, 1) = negative_orange_pattern(F_sub_term1*F_sub_term2, F_sub_term1, F_sub_term2, F_single_term, F(0, 1), F(2, 2));
 
-  F_single_term1 = F(2, 1);
   F_sub_term2 = F(1, 0)*F(2, 1) - F(1, 1)*F(2, 0);
-  F_multi_term = F_sub_term1*F_sub_term2;
-  ddw(3, 2) = orange_term*F_single_term1 + red_term*F_single_term1 + yellow_term*F_multi_term + green_term*F_multi_term;
+  ddw(3, 2) = negative_red_pattern(F_sub_term1*F_sub_term2, F_sub_term1, F_sub_term2, F_single_term, F(0, 2), F(2, 1));
 
-  F_multi_term = F_sub_term1*F_sub_term1;
-  ddw(3, 3) = yellow_term*F_multi_term + green_term*F_multi_term;
+  ddw(3, 3) = brown_pattern(F_sub_term1*F_sub_term1, F_sub_term1, F_single_term);
 
-  F_single_term1 = F(1, 1);
   F_sub_term2 = F(0, 0)*F(2, 2) - F(0, 2)*F(2, 0);
-  F_multi_term = F_sub_term1*F_sub_term2;
-  ddw(3, 4) = yellow_term*F_multi_term + red_term*F_single_term1*F_sub_term1 + green_term*F_multi_term;
+  ddw(3, 4) = yellow_blue_green_pattern(F_sub_term1*F_sub_term2, F_sub_term1, F_sub_term2, F_single_term, F(1, 1));
 
   F_sub_term2 = F(0, 1)*F(2, 0) - F(0, 0)*F(2, 1);
-  F_multi_term = F_sub_term1*F_sub_term2;
-  ddw(3, 5) = yellow_term*F_multi_term + green_term*F_multi_term;
+  ddw(3, 5) = yellow_blue_green_pattern(F_sub_term1*F_sub_term2, F_sub_term1, F_sub_term2, F_single_term, F(1, 2));
 
   F_sub_term2 = F(0, 1)*F(1, 2) - F(0, 2)*F(1, 1);
-  F_multi_term = F_sub_term1*F_sub_term2;
-  ddw(3, 6) = yellow_term*F_multi_term + green_term*F_multi_term;
+  ddw(3, 6) = yellow_blue_green_pattern(F_sub_term1*F_sub_term2, F_sub_term1, F_sub_term2, F_single_term, F(2, 0));
 
-  F_single_term1 = F(0, 2);
   F_sub_term2 = F(0, 2)*F(1, 0) - F(0, 0)*F(1, 2);
-  F_multi_term = F_sub_term1*F_sub_term2;
-  ddw(3, 7) = orange_term*F_single_term1 - red_term*F_single_term1 + yellow_term*F_multi_term + green_term*F_multi_term;
+  ddw(3, 7) = negative_red_pattern(F_sub_term1*F_sub_term2, F_sub_term1, F_sub_term2, F_single_term, F(2, 1), F(0, 2));
 
-  F_single_term1 = F(0, 1);
-  F_single_term2 = F(2, 2);
   F_sub_term2 = F(0, 0)*F(1, 1) - F(0, 1)*F(1, 0);
-  F_multi_term = F_sub_term1*F_sub_term2;
-  ddw(3, 8) = -orange_term*F_single_term1 + red_term*F_single_term1 + yellow_term*F_multi_term + blue_term*F_single_term2*F_sub_term1 + green_term*F_multi_term;
+  ddw(3, 8) = negative_orange_pattern(F_sub_term1*F_sub_term2, F_sub_term1, F_sub_term2, F_single_term, F(2, 2), F(0, 1));
 
   // row 4
-
+/*
   F_single_term1 = F(1, 1);
   F_sub_term1 = F(0, 0)*F(2, 2) - F(0, 2)*F(2, 0);
 
