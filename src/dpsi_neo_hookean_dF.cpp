@@ -1,6 +1,9 @@
 #include <dpsi_neo_hookean_dF.h>
 
 void dpsi_neo_hookean_dF(Eigen::Vector9d &dw, Eigen::Ref<const Eigen::Matrix3d> F, double C, double D) {
+  Eigen::Vector9d F_flat;
+  F_flat << F.row(0).transpose(), F.row(1).transpose(), F.row(2).transpose();
+
   Eigen::Vector9d F_terms;
   F_terms(0) = F(1, 1) * F(2, 2) - F(1, 2) * F(2, 1);
   F_terms(1) = F(1, 2) * F(2, 0) - F(1, 0) * F(2, 2);
@@ -14,10 +17,6 @@ void dpsi_neo_hookean_dF(Eigen::Vector9d &dw, Eigen::Ref<const Eigen::Matrix3d> 
 
   double J = F.determinant();
   double tr = (F.transpose() * F).trace();
-  dw = F_terms * (2 * D * (J-1) - 2 * C * tr / (3 * pow(J, 5./3)));
 
-  double term = 2 * C / pow(J, 2./3);
-  dw(0) += term * F(0, 0);
-  dw(4) += term * F(1, 1);
-  dw(8) += term * F(2, 2);
+  dw = 2*D * (J-1) * F_terms + 2*C / pow(J, 2./3) * F_flat - 2*C*tr / (3 * pow(J, 5./3)) * F_terms;
 }
