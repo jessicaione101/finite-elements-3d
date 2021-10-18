@@ -7,11 +7,10 @@ namespace {
   const double p = 0.5;
   const double c = 1e-8;
 
-  template<typename Objective, typename DerivedA, typename DerivedB, typename DerivedC>
-  double line_search(const Objective& f, const Eigen::MatrixBase<DerivedA>& x, const Eigen::MatrixBase<DerivedB>& d, const Eigen::MatrixBase<DerivedC>& g) {
-    Eigen::MatrixBase<DerivedB> d_transpose = d.transpose();
+  template<typename Objective>
+  double line_search(const Objective& f, const Eigen::VectorXd& x, const Eigen::VectorXd& d, const Eigen::VectorXd& g) {
     double alpha = 1;
-    while (alpha > tol && f(x + alpha*d) > f(x) + c*d_transpose*g)
+    while (alpha > tol && f(x + alpha*d) > f(x) + c * d.dot(g))
       alpha *= p;
     return alpha;
   }
@@ -37,7 +36,7 @@ void newtons_method(Eigen::VectorXd &x0, Objective &f, Jacobian &g, Hessian &H, 
       return;
 
     H(tmp_H, x0);
-    solver.compute(H);
+    solver.compute(tmp_H);
     if (solver.info() != Eigen::Success)
       return;
     d = solver.solve(-tmp_g);
