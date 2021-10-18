@@ -1,5 +1,21 @@
 #include <Eigen/Dense>
 #include <EigenTypes.h>
+#include <limits>
+
+namespace {
+  const double tol = std::numeric_limits<double>::epsilon();
+  const double p = 0.5;
+  const double c = 1e-8;
+
+  template<typename Objective, typename DerivedA, typename DerivedB, typename DerivedC>
+  double line_search(const Objective& f, const Eigen::MatrixBase<DerivedA>& x, const Eigen::MatrixBase<DerivedB>& d, const Eigen::MatrixBase<DerivedC>& g) {
+    Eigen::MatrixBase<DerivedB> d_transpose = d.transpose();
+    double alpha = 1;
+    while (alpha > tol && f(x + alpha*d) > f(x) + c*d_transpose*g)
+      alpha *= p;
+    return alpha;
+  }
+}
 
 //Input:
 //  x0 - initial point for newtons search
@@ -11,7 +27,24 @@
 //Output: 
 //  x0 - update x0 to new value
 template<typename Objective, typename Jacobian, typename Hessian>
-double newtons_method(Eigen::VectorXd &x0, Objective &f, Jacobian &g, Hessian &H, unsigned int maxSteps, Eigen::VectorXd &tmp_g, Eigen::SparseMatrixd &tmp_H) {
-   
-   return 0.0;
+void newtons_method(Eigen::VectorXd &x0, Objective &f, Jacobian &g, Hessian &H, unsigned int maxSteps, Eigen::VectorXd &tmp_g, Eigen::SparseMatrixd &tmp_H) {
+  Eigen::SimplicialLDLT<Eigen::SparseMatrixd> solver;
+  Eigen::VectorXd d;
+
+  for (unsigned int i = 0; i < maxSteps; ++i) {
+    g(tmp_g, x0);
+    if (tmp_g.norm() < tol)
+      return;
+
+    H(tmp_H, x0);
+    solver.compute(H);
+    if (solver.info() != Eigen::Success)
+      return;
+    d = solver.solve(-tmp_g);
+    if (solver.info() != Eigen::Success)
+      return;
+
+    double alpha = line_search(f, x0, d, tmp_g);
+    x0 = x0 + alpha*d;
+  }
 }
