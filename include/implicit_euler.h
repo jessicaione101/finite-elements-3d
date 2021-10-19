@@ -18,8 +18,24 @@
 //  qdot - set qdot to the updated generalized velocity using linearly implicit time integration
 template<typename ENERGY, typename FORCE, typename STIFFNESS> 
 inline void implicit_euler(Eigen::VectorXd &q, Eigen::VectorXd &qdot, double dt, 
-                            const Eigen::SparseMatrixd &mass,  ENERGY &energy, FORCE &force, STIFFNESS &stiffness, 
-                            Eigen::VectorXd &tmp_qdot, Eigen::VectorXd &tmp_force, Eigen::SparseMatrixd &tmp_stiffness) {
-    
+                           const Eigen::SparseMatrixd &mass, ENERGY &energy, FORCE &force, STIFFNESS &stiffness,
+                           Eigen::VectorXd &tmp_qdot, Eigen::VectorXd &tmp_force, Eigen::SparseMatrixd &tmp_stiffness) {
+  static Eigen::VectorXd tmp_g;
+  static Eigen::SparseMatrixd tmp_H;
 
+  auto gradient = [&](Eigen::VectorXd& g, Eigen::VectorXd& x) {
+    force(tmp_force, q + dt*x, qdot);
+    g = mass * (x - qdot) + dt * -tmp_force;
+  };
+
+  auto hessian = [&](Eigen::SparseMatrixd& H, Eigen::VectorXd& x) {
+    stiffness(tmp_stiffness, q + dt*x, qdot);
+    H = mass + dt*dt * -tmp_stiffness;
+  };
+
+  tmp_qdot = qdot;
+  newtons_method(tmp_qdot, energy, gradient, hessian, 5, tmp_g, tmp_H);
+
+  qdot = tmp_qdot;
+  q = q + dt*qdot;
 }
